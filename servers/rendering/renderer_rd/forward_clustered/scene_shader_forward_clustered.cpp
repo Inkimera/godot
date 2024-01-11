@@ -83,6 +83,7 @@ void SceneShaderForwardClustered::ShaderData::set_code(const String &p_code) {
 
 	ShaderCompiler::IdentifierActions actions;
 	actions.entry_point_stages["vertex"] = ShaderCompiler::STAGE_VERTEX;
+	actions.entry_point_stages["vertexLight"] = ShaderCompiler::STAGE_VERTEX;
 	actions.entry_point_stages["fragment"] = ShaderCompiler::STAGE_FRAGMENT;
 	actions.entry_point_stages["light"] = ShaderCompiler::STAGE_FRAGMENT;
 
@@ -635,6 +636,10 @@ void SceneShaderForwardClustered::init(const String p_defines) {
 		actions.renames["VIEW_RIGHT"] = "1";
 		actions.renames["EYE_OFFSET"] = "eye_offset";
 
+		//for vertex light
+		actions.renames["VERTEX_DIFFUSE_LIGHT"] = "vertex_diffuse_light";
+		actions.renames["VERTEX_SPECULAR_LIGHT"] = "vertex_specular_light";
+
 		//for light
 		actions.renames["VIEW"] = "view";
 		actions.renames["SPECULAR_AMOUNT"] = "specular_amount";
@@ -696,6 +701,7 @@ void SceneShaderForwardClustered::init(const String p_defines) {
 		actions.render_mode_defines["cull_disabled"] = "#define DO_SIDE_CHECK\n";
 		actions.render_mode_defines["particle_trails"] = "#define USE_PARTICLE_TRAILS\n";
 		actions.render_mode_defines["depth_prepass_alpha"] = "#define USE_OPAQUE_PREPASS\n";
+		actions.render_mode_defines["vertex_lighting"] = "#define VERTEX_LIGHT_CODE_USED\n";
 
 		bool force_lambert = GLOBAL_GET("rendering/shading/overrides/force_lambert_over_burley");
 
@@ -722,7 +728,7 @@ void SceneShaderForwardClustered::init(const String p_defines) {
 		actions.base_texture_binding_index = 1;
 		actions.texture_layout_set = RenderForwardClustered::MATERIAL_UNIFORM_SET;
 		actions.base_uniform_string = "material.";
-		actions.base_varying_index = 12;
+		actions.base_varying_index = 15;
 
 		actions.default_filter = ShaderLanguage::FILTER_LINEAR_MIPMAP;
 		actions.default_repeat = ShaderLanguage::REPEAT_ENABLE;

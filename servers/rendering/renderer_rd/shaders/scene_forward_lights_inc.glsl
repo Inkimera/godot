@@ -58,6 +58,9 @@ void light_compute(vec3 N, vec3 L, vec3 V, float A, vec3 light_color, bool is_di
 #ifdef LIGHT_ANISOTROPY_USED
 		vec3 B, vec3 T, float anisotropy,
 #endif
+#if defined(VERTEX_LIGHT_CODE_USED) && defined(SHADER_STAGE_FRAGMENT)
+	  vec3 vertex_diffuse_light, vec3 vertex_specular_light,
+#endif
 		inout vec3 diffuse_light, inout vec3 specular_light) {
 
 	vec4 orms_unpacked = unpackUnorm4x8(orms);
@@ -65,9 +68,16 @@ void light_compute(vec3 N, vec3 L, vec3 V, float A, vec3 light_color, bool is_di
 	float roughness = orms_unpacked.y;
 	float metallic = orms_unpacked.z;
 
-#if defined(LIGHT_CODE_USED)
-	// light is written by the light shader
+#if defined(VERTEX_LIGHT_CODE_USED) && defined(SHADER_STAGE_VERTEX)
+	vec3 normal = N;
+	vec3 light = L;
+	vec3 view = V;
 
+#CODE : VERTEXLIGHT
+#endif
+
+#if defined(LIGHT_CODE_USED) && defined(SHADER_STAGE_FRAGMENT)
+	// light is written by the light shader
 	mat4 inv_view_matrix = scene_data_block.data.inv_view_matrix;
 
 #ifdef USING_MOBILE_RENDERER
@@ -90,8 +100,9 @@ void light_compute(vec3 N, vec3 L, vec3 V, float A, vec3 light_color, bool is_di
 	vec3 view = V;
 
 #CODE : LIGHT
+#endif
 
-#else
+#if !defined(LIGHT_CODE_USED) && !defined(VERTEX_LIGHT_CODE_USED)
 
 	float NdotL = min(A + dot(N, L), 1.0);
 	float cNdotL = max(NdotL, 0.0); // clamped NdotL
@@ -255,7 +266,7 @@ void light_compute(vec3 N, vec3 L, vec3 V, float A, vec3 light_color, bool is_di
 #endif //defined(LIGHT_CODE_USED)
 }
 
-#ifndef SHADOWS_DISABLED
+#if !defined(SHADOWS_DISABLED) && !defined(SHADER_STAGE_VERTEX)
 
 // Interleaved Gradient Noise
 // https://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare
@@ -401,7 +412,7 @@ float sample_directional_soft_shadow(texture2D shadow, vec3 pssm_coord, vec2 tex
 	}
 }
 
-#endif // SHADOWS_DISABLED
+#endif //!defined(SHADOWS_DISABLED) && !defined(SHADER_STAGE_VERTEX)
 
 float get_omni_attenuation(float distance, float inv_range, float decay) {
 	float nd = distance * inv_range;
@@ -413,7 +424,7 @@ float get_omni_attenuation(float distance, float inv_range, float decay) {
 }
 
 float light_process_omni_shadow(uint idx, vec3 vertex, vec3 normal) {
-#ifndef SHADOWS_DISABLED
+#if !defined(SHADOWS_DISABLED) && !defined(SHADER_STAGE_VERTEX)
 	if (omni_lights.data[idx].shadow_opacity > 0.001) {
 		// there is a shadowmap
 		vec2 texel_size = scene_data_block.data.shadow_atlas_pixel_size;
@@ -541,7 +552,7 @@ float light_process_omni_shadow(uint idx, vec3 vertex, vec3 normal) {
 
 		return shadow;
 	}
-#endif
+#endif //!defined(SHADOWS_DISABLED) && !defined(SHADER_STAGE_VERTEX)
 
 	return 1.0;
 }
@@ -563,6 +574,9 @@ void light_process_omni(uint idx, vec3 vertex, vec3 eye_vec, vec3 normal, vec3 v
 #endif
 #ifdef LIGHT_ANISOTROPY_USED
 		vec3 binormal, vec3 tangent, float anisotropy,
+#endif
+#if defined(VERTEX_LIGHT_CODE_USED) && defined(SHADER_STAGE_FRAGMENT)
+	  vec3 vertex_diffuse_light, vec3 vertex_specular_light,
 #endif
 		inout vec3 diffuse_light, inout vec3 specular_light) {
 	vec3 light_rel_vec = omni_lights.data[idx].position - vertex;
@@ -688,12 +702,15 @@ void light_process_omni(uint idx, vec3 vertex, vec3 eye_vec, vec3 normal, vec3 v
 #ifdef LIGHT_ANISOTROPY_USED
 			binormal, tangent, anisotropy,
 #endif
+#if defined(VERTEX_LIGHT_CODE_USED) && defined(SHADER_STAGE_FRAGMENT)
+	  	vertex_diffuse_light, vertex_specular_light,
+#endif
 			diffuse_light,
 			specular_light);
 }
 
 float light_process_spot_shadow(uint idx, vec3 vertex, vec3 normal) {
-#ifndef SHADOWS_DISABLED
+#if !defined(SHADOWS_DISABLED) && !defined(SHADER_STAGE_VERTEX)
 	if (spot_lights.data[idx].shadow_opacity > 0.001) {
 		vec3 light_rel_vec = spot_lights.data[idx].position - vertex;
 		float light_length = length(light_rel_vec);
@@ -770,7 +787,7 @@ float light_process_spot_shadow(uint idx, vec3 vertex, vec3 normal) {
 		return shadow;
 	}
 
-#endif // SHADOWS_DISABLED
+#endif //!defined(SHADOWS_DISABLED) && !defined(SHADER_STAGE_VERTEX)
 
 	return 1.0;
 }
@@ -804,6 +821,9 @@ void light_process_spot(uint idx, vec3 vertex, vec3 eye_vec, vec3 normal, vec3 v
 #endif
 #ifdef LIGHT_ANISOTROPY_USED
 		vec3 binormal, vec3 tangent, float anisotropy,
+#endif
+#if defined(VERTEX_LIGHT_CODE_USED) && defined(SHADER_STAGE_FRAGMENT)
+	  vec3 vertex_diffuse_light, vec3 vertex_specular_light,
 #endif
 		inout vec3 diffuse_light,
 		inout vec3 specular_light) {
@@ -894,6 +914,9 @@ void light_process_spot(uint idx, vec3 vertex, vec3 eye_vec, vec3 normal, vec3 v
 #endif
 #ifdef LIGHT_ANISOTROPY_USED
 			binormal, tangent, anisotropy,
+#endif
+#if defined(VERTEX_LIGHT_CODE_USED) && defined(SHADER_STAGE_FRAGMENT)
+	  	vertex_diffuse_light, vertex_specular_light,
 #endif
 			diffuse_light, specular_light);
 }

@@ -345,10 +345,12 @@ public:
 	struct VaryingFunctionNames {
 		StringName fragment;
 		StringName vertex;
+		StringName vertexLight;
 		StringName light;
 		VaryingFunctionNames() {
 			fragment = "fragment";
 			vertex = "vertex";
+			vertexLight = "vertexLight";
 			light = "light";
 		}
 	};

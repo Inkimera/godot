@@ -109,6 +109,46 @@ ShaderTypes::ShaderTypes() {
 	shader_modes[RS::SHADER_SPATIAL].functions["vertex"].built_ins["VIEW_RIGHT"] = constt(ShaderLanguage::TYPE_INT);
 	shader_modes[RS::SHADER_SPATIAL].functions["vertex"].built_ins["EYE_OFFSET"] = constt(ShaderLanguage::TYPE_VEC3);
 
+
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["ALBEDO"] = constt(ShaderLanguage::TYPE_VEC3);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["ALPHA"] = ShaderLanguage::TYPE_FLOAT;
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["ATTENUATION"] = constt(ShaderLanguage::TYPE_FLOAT);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["BACKLIGHT"] = constt(ShaderLanguage::TYPE_VEC3);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["CAMERA_DIRECTION_WORLD"] = ShaderLanguage::TYPE_VEC3;
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["CAMERA_POSITION_WORLD"] = ShaderLanguage::TYPE_VEC3;
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["CAMERA_VISIBLE_LAYERS"] = ShaderLanguage::TYPE_UINT;
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["COLOR"] = ShaderLanguage::TYPE_VEC4;
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["FRAGCOORD"] = constt(ShaderLanguage::TYPE_VEC4);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["INSTANCE_CUSTOM"] = constt(ShaderLanguage::TYPE_VEC4);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["INSTANCE_ID"] = constt(ShaderLanguage::TYPE_INT);
+	//shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["INV_PROJECTION_MATRIX"] = constt(ShaderLanguage::TYPE_MAT4);
+	//shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["INV_VIEW_MATRIX"] = constt(ShaderLanguage::TYPE_MAT4);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["LIGHT"] = constt(ShaderLanguage::TYPE_VEC3);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["LIGHT_COLOR"] = constt(ShaderLanguage::TYPE_VEC3);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["LIGHT_IS_DIRECTIONAL"] = constt(ShaderLanguage::TYPE_BOOL);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["METALLIC"] = constt(ShaderLanguage::TYPE_FLOAT);
+	//shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["MODEL_MATRIX"] = constt(ShaderLanguage::TYPE_MAT4);
+	//shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["NODE_POSITION_VIEW"] = ShaderLanguage::TYPE_VEC3;
+	//shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["NODE_POSITION_WORLD"] = ShaderLanguage::TYPE_VEC3;
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["NORMAL"] = constt(ShaderLanguage::TYPE_VEC3);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["OUTPUT_IS_SRGB"] = constt(ShaderLanguage::TYPE_BOOL);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["POINT_SIZE"] = ShaderLanguage::TYPE_FLOAT;
+	//shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["PROJECTION_MATRIX"] = constt(ShaderLanguage::TYPE_MAT4);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["ROUGHNESS"] = constt(ShaderLanguage::TYPE_FLOAT);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["SPECULAR_AMOUNT"] = constt(ShaderLanguage::TYPE_FLOAT);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["UV"] = constt(ShaderLanguage::TYPE_VEC2);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["UV2"] = constt(ShaderLanguage::TYPE_VEC2);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["VERTEX"] = constt(ShaderLanguage::TYPE_VEC3);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["VERTEX_ID"] = constt(ShaderLanguage::TYPE_INT);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["VIEW"] = constt(ShaderLanguage::TYPE_VEC3);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["VIEWPORT_SIZE"] = constt(ShaderLanguage::TYPE_VEC2);
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["VIEW_MATRIX"] = constt(ShaderLanguage::TYPE_MAT4);
+
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["DIFFUSE_LIGHT"] = ShaderLanguage::TYPE_VEC3;
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].built_ins["SPECULAR_LIGHT"] = ShaderLanguage::TYPE_VEC3;
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].can_discard = false;
+	shader_modes[RS::SHADER_SPATIAL].functions["vertexLight"].main_function = true;
+
 	shader_modes[RS::SHADER_SPATIAL].functions["fragment"].built_ins["VERTEX"] = constt(ShaderLanguage::TYPE_VEC3);
 	shader_modes[RS::SHADER_SPATIAL].functions["fragment"].built_ins["FRAGCOORD"] = constt(ShaderLanguage::TYPE_VEC4);
 	shader_modes[RS::SHADER_SPATIAL].functions["fragment"].built_ins["FRONT_FACING"] = constt(ShaderLanguage::TYPE_BOOL);
@@ -196,6 +236,8 @@ ShaderTypes::ShaderTypes() {
 	shader_modes[RS::SHADER_SPATIAL].functions["light"].built_ins["BACKLIGHT"] = constt(ShaderLanguage::TYPE_VEC3);
 	shader_modes[RS::SHADER_SPATIAL].functions["light"].built_ins["METALLIC"] = constt(ShaderLanguage::TYPE_FLOAT);
 	shader_modes[RS::SHADER_SPATIAL].functions["light"].built_ins["ROUGHNESS"] = constt(ShaderLanguage::TYPE_FLOAT);
+	shader_modes[RS::SHADER_SPATIAL].functions["light"].built_ins["VERTEX_DIFFUSE_LIGHT"] = constt(ShaderLanguage::TYPE_VEC3);
+	shader_modes[RS::SHADER_SPATIAL].functions["light"].built_ins["VERTEX_SPECULAR_LIGHT"] = constt(ShaderLanguage::TYPE_VEC3);
 	shader_modes[RS::SHADER_SPATIAL].functions["light"].built_ins["DIFFUSE_LIGHT"] = ShaderLanguage::TYPE_VEC3;
 	shader_modes[RS::SHADER_SPATIAL].functions["light"].built_ins["SPECULAR_LIGHT"] = ShaderLanguage::TYPE_VEC3;
 	shader_modes[RS::SHADER_SPATIAL].functions["light"].built_ins["OUTPUT_IS_SRGB"] = constt(ShaderLanguage::TYPE_BOOL);
